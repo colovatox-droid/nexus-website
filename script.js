@@ -1,14 +1,23 @@
-const cards = document.querySelectorAll(".features-grid article, .faq-box, .hero-card");
+const cards = document.querySelectorAll('.cards article, .panel-preview, .dashboard-card');
 
-cards.forEach((card) => {
-  card.addEventListener("mousemove", (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    card.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(56,189,248,.16), rgba(8,16,31,.72) 38%)`;
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
   });
+}, { threshold: 0.15 });
 
-  card.addEventListener("mouseleave", () => {
-    card.style.background = "";
+cards.forEach(card => {
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(18px)';
+  card.style.transition = 'opacity .6s ease, transform .6s ease';
+  observer.observe(card);
+});
+
+document.addEventListener('scroll', () => {
+  document.querySelectorAll('.visible').forEach(el => {
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
   });
 });
